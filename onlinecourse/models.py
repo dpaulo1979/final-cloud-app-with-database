@@ -118,6 +118,8 @@ class Question(models.Model):
         else:
             return False
 
+    def __str__(self):
+        return self.text
 
 #  <HINT> Create a Choice Model with:
     # Used to persist choice content for a question
@@ -130,6 +132,8 @@ class Choice(models.Model):
     is_correct = models.BooleanField(default=False)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.text
 
 # <HINT> The submission model
 # One enrollment could have multiple submission

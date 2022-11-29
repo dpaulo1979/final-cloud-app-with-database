@@ -118,7 +118,7 @@ def submit(request, course_id):
     submitted_answers = extract_answers(request)
     
     for answer in submitted_answers:
-        choice = Choice.objects.create(id = answer, is_correct=True)
+        choice = Choice.objects.get(id = answer)        
         submission.choices.add(choice)
     submission.save()  
 
@@ -144,7 +144,17 @@ def extract_answers(request):
 def show_exam_result(request, course_id, submission_id):
     course = get_object_or_404(Course, pk=course_id)  
     submission = get_object_or_404(Submission, pk=submission_id)  
-    selected_choices = submission.choices
+    choices = submission.choices.all()
+    
+    total_score = 0
+    context = {}
 
+    for choice in choices:
+        if choice.is_correct:
+            total_score += choice.question.grade
 
+    context['course'] = course
+    context['total_score'] = total_score
+    context['choices'] = choices
 
+    return render(request, 'onlinecourse/exam_result_bootstrap.html', context) 
